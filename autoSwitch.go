@@ -23,7 +23,7 @@ type configuration struct {
 
 var (
 	debug     bool
-	force bool
+	force     bool
 	configdir *string
 )
 var config configuration

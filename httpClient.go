@@ -3,8 +3,8 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"net/http"
 	"io/ioutil"
+	"net/http"
 )
 
 func getData(reqType string) ([]byte, error) {
