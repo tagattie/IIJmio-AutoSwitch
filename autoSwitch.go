@@ -33,6 +33,7 @@ func main() {
 	configdir = flag.String("c", configFileDir, "config file directory")
 	d := flag.Bool("d", false, "debug mode (verbose output)")
 	f := flag.Bool("f", false, "force send change request (even when no change)")
+	s := flag.Bool("s", true, "silent mode (no output except error msgs)")
 	flag.Parse()
 	debug = *d
 	force = *f
@@ -81,8 +82,10 @@ func main() {
 
 	// Extract latest packet usage data
 	latestPacketData := extractLatestPacketData(packetData)
-	fmt.Printf("%s\n", "Latest packet usage (in MB):")
-	fmt.Printf("%+v\n\n", latestPacketData)
+	if silent == false {
+		fmt.Printf("%s\n", "Latest packet usage (in MB):")
+		fmt.Printf("%+v\n\n", latestPacketData)
+	}
 
 	// Get coupon status and amount data from server
 	couponBytes, err := getData("coupon")
@@ -104,8 +107,10 @@ func main() {
 
 	// Extract current coupon state and availability
 	couponState, couponAmount := getCouponStateAndAmount(couponData)
-	fmt.Printf("%s\n", "Current coupon state and amount:")
-	fmt.Printf("%+v %+v\n\n", couponState, couponAmount)
+	if silent == false {
+		fmt.Printf("%s\n", "Current coupon state and amount:")
+		fmt.Printf("%+v %+v\n\n", couponState, couponAmount)
+	}
 
 	// Make coupon state change request based on
 	// latest packet data and current coupon state, and amount
@@ -122,8 +127,10 @@ func main() {
 			}
 		}
 	}
-	fmt.Printf("%s\n", "Coupon status change request:")
-	fmt.Printf("%+v\n\n", couponReqInfo)
+	if silent == false {
+		fmt.Printf("%s\n", "Coupon status change request:")
+		fmt.Printf("%+v\n\n", couponReqInfo)
+	}
 	// If no need to make change request, exit here
 	if len(couponReqInfo) == 0 && !force {
 		return
@@ -153,8 +160,10 @@ func main() {
 		fmt.Println("JSON data decode error: ", err)
 		os.Exit(1)
 	}
-	fmt.Printf("%s\n", "Counpon change response JSON:")
-	fmt.Printf("%+v\n\n", *couponResp)
+	if silent == false {
+		fmt.Printf("%s\n", "Counpon change response JSON:")
+		fmt.Printf("%+v\n\n", *couponResp)
+	}
 
 	return
 }
