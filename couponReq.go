@@ -26,7 +26,6 @@ type couponReq struct {
 func encodeCouponReqJSON(couponReqInfo map[string]bool) ([]byte, error) {
 	creq := couponReq{}
 
-//	i, j := 0, 0
 	crhdois := []cReqHdoInfo{}
 	crhduis := []cReqHduInfo{}
 	for k, v := range couponReqInfo {
@@ -36,14 +35,12 @@ func encodeCouponReqJSON(couponReqInfo map[string]bool) ([]byte, error) {
 				CouponUse:      v,
 			}
 			crhdois = append(creq.CouponInfo[0].HdoInfo, crhdoi)
-//			i++
 		} else if strings.Index(k, "hdu") == 0 {
 			crhdui := cReqHduInfo{
 				HduServiceCode: k,
 				CouponUse:      v,
 			}
 			crhduis = append(crhduis, crhdui)
-//			j++
 		} else {
 			fmt.Println("Service code error: ", k)
 		}
