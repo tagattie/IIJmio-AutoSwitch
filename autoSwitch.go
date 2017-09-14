@@ -22,9 +22,10 @@ type configuration struct {
 }
 
 var (
+	configdir *string
 	debug     bool
 	force     bool
-	configdir *string
+	silent    bool
 )
 var config configuration
 
