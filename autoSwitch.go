@@ -37,6 +37,7 @@ func main() {
 	flag.Parse()
 	debug = *d
 	force = *f
+	silent = *s
 
 	// Configuration file
 	cf := filepath.Join(*configdir, "/", configFileName)
