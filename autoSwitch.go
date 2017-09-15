@@ -84,7 +84,7 @@ func main() {
 
 	// Extract latest packet usage data
 	latestPacketData := extractLatestPacketData(packetData)
-	if silent == false {
+	if silent == false || debug == true {
 		fmt.Printf("%s\n", "Latest packet usage (in MB):")
 		fmt.Printf("%+v\n\n", latestPacketData)
 	}
@@ -109,7 +109,7 @@ func main() {
 
 	// Extract current coupon state and availability
 	couponState, couponAmount := getCouponStateAndAmount(couponData)
-	if silent == false {
+	if silent == false || debug == true {
 		fmt.Printf("%s\n", "Current coupon state and amount:")
 		fmt.Printf("%+v %+v\n\n", couponState, couponAmount)
 	}
@@ -129,7 +129,7 @@ func main() {
 			}
 		}
 	}
-	if silent == false {
+	if silent == false || debug == true {
 		fmt.Printf("%s\n", "Coupon status change request:")
 		fmt.Printf("%+v\n\n", couponReqInfo)
 	}
@@ -162,7 +162,7 @@ func main() {
 		fmt.Println("JSON data decode error: ", err)
 		os.Exit(1)
 	}
-	if silent == false {
+	if silent == false || debug == true {
 		fmt.Printf("%s\n", "Counpon change response JSON:")
 		fmt.Printf("%+v\n\n", *couponResp)
 	}
