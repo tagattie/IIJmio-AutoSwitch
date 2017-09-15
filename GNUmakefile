@@ -1,5 +1,5 @@
 NAME	:= autoswitch
-SRCS	:= $(shell find . -depth 1 -type f -name '*.go')
+SRCS	:= $(shell find . -depth -maxdepth 1 -type f -name '*.go')
 LDFLAGS	:= -ldflags="-extldflags \"-static\""
 
 
