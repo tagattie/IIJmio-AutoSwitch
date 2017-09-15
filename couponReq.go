@@ -34,7 +34,7 @@ func encodeCouponReqJSON(couponReqInfo map[string]bool) ([]byte, error) {
 				HdoServiceCode: k,
 				CouponUse:      v,
 			}
-			crhdois = append(creq.CouponInfo[0].HdoInfo, crhdoi)
+			crhdois = append(crhdois, crhdoi)
 		} else if strings.Index(k, "hdu") == 0 {
 			crhdui := cReqHduInfo{
 				HduServiceCode: k,
