@@ -76,6 +76,7 @@ make
 
 ```json:autoSwitch.json
 {
+    "developerId": "nWmKQvVQbEfM11PzENM",
     "accessToken": "YOUR_ACCESS_TOKEN"
 }
 ```
