@@ -1,4 +1,5 @@
 {
     "developerId": "nWmKQvVQbEfM11PzENM",
-    "accessToken": "YOUR_ACCESS_TOKEN"
+    "accessToken": "YOUR_ACCESS_TOKEN",
+    "maxDailyAmount": 200
 }

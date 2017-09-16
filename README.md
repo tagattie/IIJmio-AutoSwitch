@@ -77,11 +77,15 @@ make
 ```json:autoSwitch.json
 {
     "developerId": "nWmKQvVQbEfM11PzENM",
-    "accessToken": "YOUR_ACCESS_TOKEN"
+    "accessToken": "YOUR_ACCESS_TOKEN",
+    "maxDailyAmount": 200
 }
 ```
 
-取得したアクセストークンを設定してください。
+- 設定項目
+  - `developerId`: クーポンスイッチAPIの認証に使用する開発者IDです。変更しないでください。
+  - `accessToken`: 認証に使用するアクセストークンです。上記の手順で取得した値を設定してください。
+  - `maxDailyAmount`: ここで設定した値(MB)を超えるとクーポン使用をOFFにします。
 
 ## 実行
 以下のコマンドを実行します:

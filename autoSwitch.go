@@ -19,6 +19,7 @@ const (
 type configuration struct {
 	DeveloperId string `json:"developerId"`
 	AccessToken string `json:"accessToken"`
+	MaxDailyAmount int `json:"maxDailyAmount"`
 }
 
 var (
@@ -62,6 +63,9 @@ func main() {
 	if debug == true {
 		fmt.Printf("%s\n", "Configuration: ")
 		fmt.Printf("%+v\n\n", config)
+	}
+	if config.MaxDailyAmount <= 0 {
+		fmt.Printf("WARNING: Max daily amount is less than or equal to 0. Coupon use will be always set OFF.\n")
 	}
 
 	// Get packet data from server
@@ -118,11 +122,11 @@ func main() {
 	// latest packet data and current coupon state, and amount
 	couponReqInfo := make(map[string]bool)
 	for k, _ := range latestPacketData {
-		// TODO: daily limit (in MB) should be configurable
-		//       currently hard-coded as 200MB
-		if latestPacketData[k] >= 200 && couponState[k] == true {
+		if latestPacketData[k] >= config.MaxDailyAmount &&
+			couponState[k] == true {
 			couponReqInfo[k] = false
-		} else if latestPacketData[k] < 200 && couponState[k] == false {
+		} else if latestPacketData[k] < config.MaxDailyAmount &&
+			couponState[k] == false {
 			// Only when there is still coupon amount available
 			if couponAmount > 0 {
 				couponReqInfo[k] = true
