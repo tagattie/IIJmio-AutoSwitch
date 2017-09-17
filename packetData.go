@@ -52,9 +52,9 @@ func decodePacketDataJSON(packetBytes []byte) (*packetData, error) {
 	}
 
 	if returnCode := pd.ReturnCode; returnCode != "OK" {
-		fmt.Println("Packer request return code error: ", returnCode)
+		fmt.Println("Packet request return code error: ", returnCode)
 		err := fmt.Errorf("Packet request return code is %s", returnCode)
-		return nil, err
+		return &pd, err
 	}
 
 	return &pd, nil

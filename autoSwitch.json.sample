@@ -1,5 +1,19 @@
 {
-    "developerId": "nWmKQvVQbEfM11PzENM",
-    "accessToken": "YOUR_ACCESS_TOKEN",
-    "maxDailyAmount": 200
+    "mio": {
+        "developerId":    "nWmKQvVQbEfM11PzENM",
+        "accessToken":    "YOUR_ACCESS_TOKEN",
+        "maxDailyAmount": 200
+    },
+    "mail": {
+        "smtpServer": "smtp.example.com",
+        "smtpPort":   "587",
+        "toAddrs":    [
+            "someone1@example.com",
+            "someone2@example.com"
+        ],
+        "fromAddr":   "autoswitch@example.com",
+        "auth":       true,
+        "usernamd":   "authusername",
+        "password":   "authpassword"
+    }
 }

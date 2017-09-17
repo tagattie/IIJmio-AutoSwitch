@@ -16,10 +16,23 @@ const (
 	packetEndpoint = "https://api.iijmio.jp/mobile/d/v2/log/packet/"
 )
 
+type mio struct {
+	DeveloperId    string `json:"developerId"`
+	AccessToken    string `json:"accessToken"`
+	MaxDailyAmount int    `json:"maxDailyAmount"`
+}
+type mail struct {
+	SmtpServer string   `json:"smtpServer"`
+	SmtpPort   string   `json:"smtpPort"`
+	ToAddrs    []string `json:"toAddrs"`
+	FromAddr   string   `json:"fromAddr"`
+	Auth       bool     `json:"auth"`
+	Username   string   `json:"username"`
+	Password   string   `json:"password"`
+}
 type configuration struct {
-	DeveloperId string `json:"developerId"`
-	AccessToken string `json:"accessToken"`
-	MaxDailyAmount int `json:"maxDailyAmount"`
+	Mio  mio  `json:"mio"`
+	Mail mail `json:"mail"`
 }
 
 var (
@@ -64,7 +77,7 @@ func main() {
 		fmt.Printf("%s\n", "Configuration: ")
 		fmt.Printf("%+v\n\n", config)
 	}
-	if config.MaxDailyAmount <= 0 {
+	if config.Mio.MaxDailyAmount <= 0 {
 		fmt.Printf("WARNING: Max daily amount is less than or equal to 0. Coupon use will be always set OFF.\n")
 	}
 
@@ -79,6 +92,10 @@ func main() {
 	packetData, err := decodePacketDataJSON(packetBytes)
 	if err != nil {
 		fmt.Println("JSON data decode error: ", err)
+		subjectReason := packetData.ReturnCode
+		if err := sendMail(subjectReason); err != nil {
+			fmt.Println("Sending mail error: ", err)
+		}
 		os.Exit(1)
 	}
 	if debug == true {
@@ -122,10 +139,10 @@ func main() {
 	// latest packet data and current coupon state, and amount
 	couponReqInfo := make(map[string]bool)
 	for k, _ := range latestPacketData {
-		if latestPacketData[k] >= config.MaxDailyAmount &&
+		if latestPacketData[k] >= config.Mio.MaxDailyAmount &&
 			couponState[k] == true {
 			couponReqInfo[k] = false
-		} else if latestPacketData[k] < config.MaxDailyAmount &&
+		} else if latestPacketData[k] < config.Mio.MaxDailyAmount &&
 			couponState[k] == false {
 			// Only when there is still coupon amount available
 			if couponAmount > 0 {
