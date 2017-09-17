@@ -23,8 +23,8 @@ func getData(reqType string) ([]byte, error) {
 	}
 
 	req, err := http.NewRequest("GET", url, nil)
-	req.Header.Add("X-IIJmio-Developer", config.DeveloperId)
-	req.Header.Add("X-IIJmio-Authorization", config.AccessToken)
+	req.Header.Add("X-IIJmio-Developer", config.Mio.DeveloperId)
+	req.Header.Add("X-IIJmio-Authorization", config.Mio.AccessToken)
 	if err != nil {
 		fmt.Println("HTTP GET request error: ", err)
 		return nil, err
@@ -65,8 +65,8 @@ func putCouponRequest(couponReqBytes []byte) ([]byte, error) {
 	var bbuf bytes.Buffer
 	bbuf.Write(couponReqBytes)
 	req, err := http.NewRequest("PUT", url, &bbuf)
-	req.Header.Add("X-IIJmio-Developer", config.DeveloperId)
-	req.Header.Add("X-IIJmio-Authorization", config.AccessToken)
+	req.Header.Add("X-IIJmio-Developer", config.Mio.DeveloperId)
+	req.Header.Add("X-IIJmio-Authorization", config.Mio.AccessToken)
 	req.Header.Add("Content-Type", "application/json")
 	if err != nil {
 		fmt.Println("HTTP PUT request error: ", err)
