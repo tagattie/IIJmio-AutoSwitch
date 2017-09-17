@@ -22,6 +22,7 @@ type mio struct {
 	MaxDailyAmount int    `json:"maxDailyAmount"`
 }
 type mail struct {
+	Enabled    bool     `json:"enabled"`
 	SmtpServer string   `json:"smtpServer"`
 	SmtpPort   string   `json:"smtpPort"`
 	ToAddrs    []string `json:"toAddrs"`
@@ -92,9 +93,11 @@ func main() {
 	packetData, err := decodePacketDataJSON(packetBytes)
 	if err != nil {
 		fmt.Println("JSON data decode error: ", err)
-		subjectReason := packetData.ReturnCode
-		if err := sendMail(subjectReason); err != nil {
-			fmt.Println("Sending mail error: ", err)
+		if config.Mail.Enabled == true {
+			subjectReason := packetData.ReturnCode
+			if err := sendMail(subjectReason); err != nil {
+				fmt.Println("Sending mail error: ", err)
+			}
 		}
 		os.Exit(1)
 	}

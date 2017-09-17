@@ -5,6 +5,7 @@
         "maxDailyAmount": 200
     },
     "mail": {
+        "enabled":    false,
         "smtpServer": "smtp.example.com",
         "smtpPort":   "587",
         "toAddrs":    [
