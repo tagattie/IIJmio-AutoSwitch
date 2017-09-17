@@ -7,10 +7,10 @@
     "mail": {
         "smtpServer": "smtp.example.com",
         "smtpPort":   "587",
-        "toAddr":     [
+        "toAddrs":    [
             "someone1@example.com",
             "someone2@example.com"
-        ]
+        ],
         "fromAddr":   "autoswitch@example.com",
         "auth":       true,
         "usernamd":   "authusername",
