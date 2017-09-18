@@ -14,7 +14,7 @@
         ],
         "fromAddr":   "autoswitch@example.com",
         "auth":       true,
-        "usernamd":   "authusername",
+        "username":   "authusername",
         "password":   "authpassword"
     },
     "slack": {
