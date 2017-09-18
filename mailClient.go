@@ -40,8 +40,6 @@ func constructMessage(subject string) string {
 	}
 	subjectStr := "Subject: IIJmio AutoSwitch: " + subject + "\r\n\r\n"
 
-	authUrl := "https://api.iijmio.jp/mobile/d/v1/authorization/?response_type=token&client_id=nWmKQvVQbEfM11PzENM&state=auth-request&redirect_uri=jp.or.iij4u.rr.tagattie.autoswitch"
-
 	var message string
 	switch subject {
 	case "Your application is not registered":
