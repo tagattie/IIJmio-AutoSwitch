@@ -15,14 +15,15 @@ const (
 	couponEndpoint = "https://api.iijmio.jp/mobile/d/v2/coupon/"
 	packetEndpoint = "https://api.iijmio.jp/mobile/d/v2/log/packet/"
 	authUrl        = "https://api.iijmio.jp/mobile/d/v1/authorization/?response_type=token&client_id=nWmKQvVQbEfM11PzENM&state=auth-request&redirect_uri=jp.or.iij4u.rr.tagattie.autoswitch"
+	authUrlEncoded = "https://api.iijmio.jp/mobile/d/v1/authorization/%3Fresponse_type%3Dtoken%26client_id%3DnWmKQvVQbEfM11PzENM%26state%3Dauth-request%26redirect_uri%3Djp.or.iij4u.rr.tagattie.autoswitch"
 )
 
-type mio struct {
+type mioconf struct {
 	DeveloperId    string `json:"developerId"`
 	AccessToken    string `json:"accessToken"`
 	MaxDailyAmount int    `json:"maxDailyAmount"`
 }
-type mail struct {
+type mailconf struct {
 	Enabled    bool     `json:"enabled"`
 	SmtpServer string   `json:"smtpServer"`
 	SmtpPort   string   `json:"smtpPort"`
@@ -32,9 +33,16 @@ type mail struct {
 	Username   string   `json:"username"`
 	Password   string   `json:"password"`
 }
+type slackconf struct {
+	Enabled bool   `json:"enabled"`
+	Token   string `json:"token"`
+	Channel string `json:"channel"`
+}
+
 type configuration struct {
-	Mio  mio  `json:"mio"`
-	Mail mail `json:"mail"`
+	Mio   mioconf   `json:"mio"`
+	Mail  mailconf  `json:"mail"`
+	Slack slackconf `json:"slack"`
 }
 
 var (
@@ -98,6 +106,9 @@ func main() {
 			subjectReason := packetData.ReturnCode
 			if err := sendMail(subjectReason); err != nil {
 				fmt.Println("Sending mail error: ", err)
+			}
+			if err = sendSlack(subjectReason); err != nil {
+				fmt.Println("Sending slack error: ", err)
 			}
 		}
 		os.Exit(1)

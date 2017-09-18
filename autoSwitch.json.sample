@@ -16,5 +16,10 @@
         "auth":       true,
         "usernamd":   "authusername",
         "password":   "authpassword"
+    },
+    "slack": {
+        "enabled": false,
+        "token":   "slacktoken",
+        "channel": "channelname",
     }
 }
