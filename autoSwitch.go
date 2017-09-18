@@ -102,11 +102,13 @@ func main() {
 	packetData, err := decodePacketDataJSON(packetBytes)
 	if err != nil {
 		fmt.Println("JSON data decode error: ", err)
+		subjectReason := packetData.ReturnCode
 		if config.Mail.Enabled == true {
-			subjectReason := packetData.ReturnCode
 			if err := sendMail(subjectReason); err != nil {
 				fmt.Println("Sending mail error: ", err)
 			}
+		}
+		if config.Slack.Enabled == true {
 			if err = sendSlack(subjectReason); err != nil {
 				fmt.Println("Sending slack error: ", err)
 			}
