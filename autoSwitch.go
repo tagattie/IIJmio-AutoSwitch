@@ -156,10 +156,12 @@ func main() {
 	// latest packet data and current coupon state, and amount
 	couponReqInfo := make(map[string]bool)
 	for k, _ := range latestPacketData {
-		if latestPacketData[k] >= config.Mio.MaxDailyAmount &&
+		// latestPacketData[k][0]: Packet data amount with coupon
+		// latestPacketData[k][1]: Packet data amount without coupon
+		if latestPacketData[k][0] >= config.Mio.MaxDailyAmount &&
 			couponState[k] == true {
 			couponReqInfo[k] = false
-		} else if latestPacketData[k] < config.Mio.MaxDailyAmount &&
+		} else if latestPacketData[k][0] < config.Mio.MaxDailyAmount &&
 			couponState[k] == false {
 			// Only when there is still coupon amount available
 			if couponAmount > 0 {

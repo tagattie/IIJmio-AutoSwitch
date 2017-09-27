@@ -60,8 +60,8 @@ func decodePacketDataJSON(packetBytes []byte) (*packetData, error) {
 	return &pd, nil
 }
 
-func extractLatestPacketData(packetData *packetData) map[string]int {
-	latestPacketData := make(map[string]int)
+func extractLatestPacketData(packetData *packetData) map[string][]int {
+	latestPacketData := make(map[string][]int)
 	// Extract latest (= today's) packet data
 	plis := packetData.PacketLogInfo
 	if plisLength := len(plis); plisLength > 0 {
@@ -75,7 +75,10 @@ func extractLatestPacketData(packetData *packetData) map[string]int {
 						// Sort data in descending order by date
 						sort.Sort(pls)
 						// Index 0 means today
-						latestPacketData[hdoInfo.HdoServiceCode] = pls[0].WithCoupon
+						pl := make([]int, 2)
+						pl[0] = pls[0].WithCoupon
+						pl[1] = pls[0].WithoutCoupon
+						latestPacketData[hdoInfo.HdoServiceCode] = pl
 					}
 				}
 			}
