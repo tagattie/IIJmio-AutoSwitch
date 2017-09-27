@@ -104,7 +104,7 @@ func main() {
 		fmt.Println("JSON data decode error: ", err)
 		subjectReason := packetData.ReturnCode
 		if config.Mail.Enabled == true {
-			if err := sendMail(subjectReason); err != nil {
+			if err := sendErrorMail(subjectReason); err != nil {
 				fmt.Println("Sending mail error: ", err)
 			}
 		}

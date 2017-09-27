@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func sendMail(subject string) error {
+func sendErrorMail(subject string) error {
 	var auth smtp.Auth
 	if config.Mail.Auth == true {
 		auth = smtp.PlainAuth(
@@ -18,7 +18,7 @@ func sendMail(subject string) error {
 		auth = nil
 	}
 
-	body := constructMessage(subject)
+	body := constructErrorMessage(subject)
 
 	smtpServerAddr := config.Mail.SmtpServer + ":" + config.Mail.SmtpPort
 	if err := smtp.SendMail(
@@ -33,7 +33,7 @@ func sendMail(subject string) error {
 	return nil
 }
 
-func constructMessage(subject string) string {
+func constructErrorMessage(subject string) string {
 	var toStr string
 	for _, v := range config.Mail.ToAddrs {
 		toStr += "To: " + v + "\r\n"
