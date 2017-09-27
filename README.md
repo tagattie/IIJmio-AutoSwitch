@@ -27,14 +27,15 @@ Androidには[Mio Mix](https://play.google.com/store/apps/details?id=com.itworks
 - 認証エラー発生時に設定したチャネルにSlackメッセージを送信(有効化時のみ)
 
 ## 動作環境
-- Unix-like OS
+- Unix-like OS / Windows
 - Go
 - GNU Make
 
 以下の環境で動作確認をしています。
 
-- Ubuntu 14.04.5 (Go 1.2.1, GNU Make 3.81)
-- FreeBSD 11.1-RELEASE (Go 1.9, GNU Make 4.2.1)
+- Ubuntu 14.04.5 64bit (Go 1.2.1, GNU Make 3.81)
+- FreeBSD 11.1-RELEASE 64bit (Go 1.9, GNU Make 4.2.1)
+- Windows 10 64bit (Go 1.9, GNU Make 4.2.1)
 
 ## ビルド
 以下のコマンドを実行します:
