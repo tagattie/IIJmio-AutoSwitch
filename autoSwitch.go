@@ -104,7 +104,8 @@ func main() {
 		fmt.Println("JSON data decode error: ", err)
 		subjectReason := packetData.ReturnCode
 		if config.Mail.Enabled == true {
-			if err := sendErrorMail(subjectReason); err != nil {
+			message := buildErrorMessage(subjectReason)
+			if err := sendMail(message); err != nil {
 				fmt.Println("Sending mail error: ", err)
 			}
 		}
@@ -205,6 +206,18 @@ func main() {
 	if silent == false || debug == true {
 		fmt.Printf("%s\n", "Counpon change response JSON:")
 		fmt.Printf("%+v\n\n", *couponResp)
+	}
+
+	// Send coupon change report mail
+	if config.Mail.Enabled == true {
+		message := buildReportMessage(latestPacketData,
+			couponState,
+			couponAmount,
+			couponReqInfo)
+		if err := sendMail(message); err != nil {
+			fmt.Println("Sending mail error: ", err)
+			os.Exit(1)
+		}
 	}
 
 	return
