@@ -32,7 +32,6 @@ type packetData struct {
 }
 
 type PacketLogs []packetLog
-
 func (pls PacketLogs) Len() int {
 	return len(pls)
 }
@@ -41,6 +40,21 @@ func (pls PacketLogs) Less(i, j int) bool {
 }
 func (pls PacketLogs) Swap(i, j int) {
 	pls[i], pls[j] = pls[j], pls[i]
+}
+
+type StringIntSlice struct {
+	key   string
+	value []int
+}
+type ListStringIntSlice []StringIntSlice
+func (l ListStringIntSlice) Len() int {
+	return len(l)
+}
+func (l ListStringIntSlice) Less(i, j int) bool {
+	return (l[i].key < l[j].key)
+}
+func (l ListStringIntSlice) Swap(i, j int) {
+	l[i], l[j] = l[j], l[i]
 }
 
 func decodePacketDataJSON(packetBytes []byte) (*packetData, error) {
@@ -83,6 +97,15 @@ func extractLatestPacketData(packetData *packetData) map[string][]int {
 				}
 			}
 		}
+	}
+	// Sort latest package data by user id (service code)
+	list := ListStringIntSlice{}
+	for k, v := range latestPacketData {
+		list = append(list, StringIntSlice{k, v})
+	}
+	sort.Sort(list)
+	for _, v := range list {
+		latestPacketData[v.key] = v.value
 	}
 	return latestPacketData
 }
