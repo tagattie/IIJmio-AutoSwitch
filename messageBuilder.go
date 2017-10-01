@@ -46,7 +46,7 @@ func buildReportMessage(latestPacketData map[string][]int,
 
 	message := "Your coupon status changed as follows:\r\n\r\n"
 
-	message += "- Latest Package Usage (MB)\r\n"
+	message += "- Latest Packet Usage (MB)\r\n"
 	message += "Id          WithCoupon WithoutCoupon\r\n"
 	message += "--------------------------------------\r\n"
 	for k, v := range latestPacketData {

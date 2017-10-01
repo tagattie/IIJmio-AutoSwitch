@@ -98,7 +98,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Decode package data
+	// Decode packet data
 	packetData, err := decodePacketDataJSON(packetBytes)
 	if err != nil {
 		fmt.Println("JSON data decode error: ", err)
