@@ -57,7 +57,7 @@ func buildReportMessage(latestPacketData map[string][]int,
 	message += "- Coupon Amount (MB)\r\n"
 	message += "Amount\r\n"
 	message += "------\r\n"
-	message += fmt.Sprintf("%6d\r\n\r\n")
+	message += fmt.Sprintf("%6d\r\n\r\n", couponAmount)
 	message += "- Coupon Status\r\n"
 	message += "Id          Status\r\n"
 	message += "------------------\r\n"
