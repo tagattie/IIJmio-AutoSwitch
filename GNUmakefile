@@ -1,4 +1,8 @@
-NAME	:= autoswitch
+ifeq ($(OS), Windows_NT)
+    NAME    := autoswitch.exe
+else
+    NAME	:= autoswitch
+endif
 SRCS	:= $(shell find . -depth -maxdepth 1 -type f -name '*.go')
 LDFLAGS	:= -ldflags="-extldflags \"-static\""
 
