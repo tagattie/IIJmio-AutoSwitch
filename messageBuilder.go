@@ -48,9 +48,9 @@ func buildReportMessage(latestPacketData map[string][]int,
 
 	message += "- Latest Packet Usage (MB)\r\n"
 	message += "Id          WithCoupon WithoutCoupon\r\n"
-	message += "--------------------------------------\r\n"
+	message += "------------------------------------\r\n"
 	for k, v := range latestPacketData {
-		msg := fmt.Sprintf("%s %10d %12d\r\n", k, v[0], v[1])
+		msg := fmt.Sprintf("%s %10d %13d\r\n", k, v[0], v[1])
 		message += msg
 	}
 	message += "\r\n"
@@ -60,7 +60,7 @@ func buildReportMessage(latestPacketData map[string][]int,
 	message += fmt.Sprintf("%6d\r\n\r\n", couponAmount)
 	message += "- Coupon Status\r\n"
 	message += "Id          Status\r\n"
-	message += "------------------\r\n"
+	message += "---------------------\r\n"
 	for k, v := range couponState {
 		flag := "OFF"
 		if v {
