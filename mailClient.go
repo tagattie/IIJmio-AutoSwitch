@@ -24,8 +24,8 @@ func sendMail(message string) error {
 		config.Mail.FromAddr,
 		config.Mail.ToAddrs,
 		([]byte)(message)); err != nil {
-			fmt.Printf("Sending mail error: ", err)
-			return err
-		}
+		fmt.Println("Sending mail error: ", err)
+		return err
+	}
 	return nil
 }

@@ -32,6 +32,7 @@ type packetData struct {
 }
 
 type PacketLogs []packetLog
+
 func (pls PacketLogs) Len() int {
 	return len(pls)
 }
@@ -47,6 +48,7 @@ type StringIntSlice struct {
 	value []int
 }
 type ListStringIntSlice []StringIntSlice
+
 func (l ListStringIntSlice) Len() int {
 	return len(l)
 }
