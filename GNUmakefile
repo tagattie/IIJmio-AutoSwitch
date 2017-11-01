@@ -1,5 +1,5 @@
 ifeq ($(OS), Windows_NT)
-    NAME    := autoswitch.exe
+    NAME	:= autoswitch.exe
 else
     NAME	:= autoswitch
 endif
