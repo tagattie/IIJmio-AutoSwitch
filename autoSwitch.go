@@ -121,13 +121,6 @@ func main() {
 		fmt.Printf("%+v\n\n", *packetData)
 	}
 
-	// Extract latest packet usage data
-	latestPacketData := extractLatestPacketData(packetData)
-	if silent == false || debug == true {
-		fmt.Printf("%s\n", "Latest packet usage (in MB):")
-		fmt.Printf("%+v\n\n", latestPacketData)
-	}
-
 	// Get coupon status and amount data from server
 	couponBytes, err := getData("coupon")
 	if err != nil {
@@ -146,34 +139,8 @@ func main() {
 		fmt.Printf("%+v\n\n", *couponData)
 	}
 
-	// Extract current coupon state and availability
-	couponState, couponAmount := getCouponStateAndAmount(couponData)
-	if silent == false || debug == true {
-		fmt.Printf("%s\n", "Current coupon state and amount:")
-		fmt.Printf("%+v %+v\n\n", couponState, couponAmount)
-	}
-
-	// Make coupon state change request based on
-	// latest packet data and current coupon state, and amount
-	couponReqInfo := make(map[string]bool)
-	for k, _ := range latestPacketData {
-		// latestPacketData[k][0]: Packet data amount with coupon
-		// latestPacketData[k][1]: Packet data amount without coupon
-		if latestPacketData[k][0] >= config.Mio.MaxDailyAmount &&
-			couponState[k] == true {
-			couponReqInfo[k] = false
-		} else if latestPacketData[k][0] < config.Mio.MaxDailyAmount &&
-			couponState[k] == false {
-			// Only when there is still coupon amount available
-			if couponAmount > 0 {
-				couponReqInfo[k] = true
-			}
-		}
-	}
-	if silent == false || debug == true {
-		fmt.Printf("%s\n", "Coupon status change request:")
-		fmt.Printf("%+v\n\n", couponReqInfo)
-	}
+	latestPacketData, couponState, couponAmount, couponReqInfo :=
+		couponChangeByIdBasedCouponUsage(packetData, couponData)
 	// If no need to make change request, exit here
 	if len(couponReqInfo) == 0 && !force {
 		return
