@@ -67,8 +67,10 @@ func couponChangeByRemainingCouponAmount(
 			}
 		}
 	}
-	fmt.Println("Coupon request info:")
-	fmt.Printf("%v\n\n", couponReqInfo)
+	if !silent || debug {
+		fmt.Println("Coupon request info:")
+		fmt.Printf("%v\n\n", couponReqInfo)
+	}
 
 	return latestPacketData, couponState, couponAmount, couponReqInfo
 }
