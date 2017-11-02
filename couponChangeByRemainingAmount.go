@@ -30,8 +30,8 @@ func couponChangeByRemainingCouponAmount(
 	for i := 1; i <= len(couponState); i++ {
 		couponAmountQuota = append(couponAmountQuota,
 			config.Mio.StartingCouponAmount-
-				((today-1) * config.Mio.MaxDailyAmount * len(couponState))-
-				(i * config.Mio.MaxDailyAmount))
+				((today-1)*config.Mio.MaxDailyAmount*len(couponState))-
+				(i*config.Mio.MaxDailyAmount))
 	}
 	if !silent || debug {
 		fmt.Println("Remaining coupon amount quota (in MB):")
