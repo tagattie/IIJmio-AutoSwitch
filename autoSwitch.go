@@ -152,9 +152,9 @@ func main() {
 	case 0:
 		latestPacketData, couponState, couponAmount, couponReqInfo =
 			couponChangeByIdBasedCouponUsage(packetData, couponData)
-	// case 1:
-	// 	latestPacketData, couponState, couponAmount, couponReqInfo =
-	// 		couponChangeByRemainingCouponAmount(packetData, couponData)
+	case 1:
+		latestPacketData, couponState, couponAmount, couponReqInfo =
+			couponChangeByRemainingCouponAmount(packetData, couponData)
 	}
 	// If no need to make change request, exit here
 	if len(couponReqInfo) == 0 && !force {
