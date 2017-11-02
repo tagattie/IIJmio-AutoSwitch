@@ -53,7 +53,7 @@ func (l ListStringIntSlice) Len() int {
 	return len(l)
 }
 func (l ListStringIntSlice) Less(i, j int) bool {
-	return (l[i].key < l[j].key)
+	return (l[i].value[0] > l[j].value[0])
 }
 func (l ListStringIntSlice) Swap(i, j int) {
 	l[i], l[j] = l[j], l[i]
@@ -100,14 +100,38 @@ func extractLatestPacketData(packetData *packetData) map[string][]int {
 			}
 		}
 	}
-	// Sort latest package data by user id (service code)
+	return latestPacketData
+}
+
+func extractLatestPacketDataSortedByAmount(packetData *packetData) ListStringIntSlice {
+	latestPacketData := make(map[string][]int)
+	// Extract latest (= today's) packet data
+	plis := packetData.PacketLogInfo
+	if plisLength := len(plis); plisLength > 0 {
+		for i, _ := range plis {
+			hdois := plis[i].HdoInfo
+			if hdoisLength := len(hdois); hdoisLength > 0 {
+				for j, hdoInfo := range hdois {
+					var pls PacketLogs
+					pls = hdois[j].PacketLog
+					if plLength := len(pls); plLength > 0 {
+						// Sort data in descending order by date
+						sort.Sort(pls)
+						// Index 0 means today
+						pl := make([]int, 2)
+						pl[0] = pls[0].WithCoupon
+						pl[1] = pls[0].WithoutCoupon
+						latestPacketData[hdoInfo.HdoServiceCode] = pl
+					}
+				}
+			}
+		}
+	}
+	// Sort latest package data by coupon usage amount
 	list := ListStringIntSlice{}
 	for k, v := range latestPacketData {
 		list = append(list, StringIntSlice{k, v})
 	}
 	sort.Sort(list)
-	for _, v := range list {
-		latestPacketData[v.key] = v.value
-	}
-	return latestPacketData
+	return list
 }
