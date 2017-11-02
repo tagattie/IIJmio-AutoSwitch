@@ -19,9 +19,13 @@ const (
 )
 
 type mioconf struct {
-	DeveloperId    string `json:"developerId"`
-	AccessToken    string `json:"accessToken"`
-	MaxDailyAmount int    `json:"maxDailyAmount"`
+	DeveloperId          string `json:"developerId"`
+	AccessToken          string `json:"accessToken"`
+	MaxDailyAmount       int    `json:"maxDailyAmount"`
+	StartingCouponAmount int    `json:"startingCouponAmount"`
+}
+type switchconf struct {
+	SwitchMethod int `json:"switchMethod"`
 }
 type mailconf struct {
 	Enabled    bool     `json:"enabled"`
@@ -40,9 +44,10 @@ type slackconf struct {
 }
 
 type configuration struct {
-	Mio   mioconf   `json:"mio"`
-	Mail  mailconf  `json:"mail"`
-	Slack slackconf `json:"slack"`
+	Mio    mioconf    `json:"mio"`
+	Switch switchconf `json:"switch"`
+	Mail   mailconf   `json:"mail"`
+	Slack  slackconf  `json:"slack"`
 }
 
 var (
@@ -139,8 +144,18 @@ func main() {
 		fmt.Printf("%+v\n\n", *couponData)
 	}
 
-	latestPacketData, couponState, couponAmount, couponReqInfo :=
-		couponChangeByIdBasedCouponUsage(packetData, couponData)
+	var latestPacketData map[string][]int
+	var couponState map[string]bool
+	var couponAmount int
+	var couponReqInfo map[string]bool
+	switch config.Switch.SwitchMethod {
+	case 0:
+		latestPacketData, couponState, couponAmount, couponReqInfo =
+			couponChangeByIdBasedCouponUsage(packetData, couponData)
+	// case 1:
+	// 	latestPacketData, couponState, couponAmount, couponReqInfo =
+	// 		couponChangeByRemainingCouponAmount(packetData, couponData)
+	}
 	// If no need to make change request, exit here
 	if len(couponReqInfo) == 0 && !force {
 		return
