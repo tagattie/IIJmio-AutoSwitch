@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"time"
 )
 
@@ -14,18 +14,14 @@ func couponChangeByRemainingCouponAmount(
 	map[string]bool) {
 	// Extract current coupon state and availability
 	couponState, couponAmount := getCouponStateAndAmount(couponData)
-	if !silent || debug {
-		fmt.Println("Current coupon state and amount:")
-		fmt.Printf("%+v %+v\n\n", couponState, couponAmount)
-	}
+	log.Println("Current coupon state and amount:")
+	log.Printf("%+v %+v\n", couponState, couponAmount)
 
 	// Get today's date
 	today := time.Now().Day()
-	if debug {
-		fmt.Println("Today's day:")
-		fmt.Printf("%+v\n\n", today)
-	}
-	// Calculate remaining coupon quotas
+	log.Println("Today's day:")
+	log.Printf("%+v\n", today)
+	// Calculate coupon quotas to apply
 	couponAmountQuota := []int{}
 	for i := 1; i <= len(couponState); i++ {
 		couponAmountQuota = append(couponAmountQuota,
@@ -33,17 +29,13 @@ func couponChangeByRemainingCouponAmount(
 				((today-1)*config.Mio.MaxDailyAmount*len(couponState))-
 				(i*config.Mio.MaxDailyAmount))
 	}
-	if !silent || debug {
-		fmt.Println("Remaining coupon amount quota (in MB):")
-		fmt.Printf("%+v\n\n", couponAmountQuota)
-	}
+	log.Println("Remaining coupon amount quotas (in MB):")
+	log.Printf("%+v\n", couponAmountQuota)
 
 	// Extract latest packet usage data
 	latestPacketDataSortedByAmount := extractLatestPacketDataSortedByAmount(packetData)
-	if !silent || debug {
-		fmt.Println("Latest packet usage (in MB):")
-		fmt.Printf("%+v\n\n", latestPacketDataSortedByAmount)
-	}
+	log.Println("Latest packet usage (in MB):")
+	log.Printf("%+v\n", latestPacketDataSortedByAmount)
 	latestPacketData := make(map[string][]int)
 	for _, v := range latestPacketDataSortedByAmount {
 		latestPacketData[v.key] = v.value
@@ -67,10 +59,8 @@ func couponChangeByRemainingCouponAmount(
 			}
 		}
 	}
-	if !silent || debug {
-		fmt.Println("Coupon request info:")
-		fmt.Printf("%v\n\n", couponReqInfo)
-	}
+	log.Println("Coupon request info:")
+	log.Printf("%v\n", couponReqInfo)
 
 	return latestPacketData, couponState, couponAmount, couponReqInfo
 }

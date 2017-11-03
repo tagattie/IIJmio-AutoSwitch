@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/smtp"
 )
 
@@ -24,7 +24,7 @@ func sendMail(message string) error {
 		config.Mail.FromAddr,
 		config.Mail.ToAddrs,
 		([]byte)(message)); err != nil {
-		fmt.Println("Sending mail error: ", err)
+		log.Println("Sending mail error: ", err)
 		return err
 	}
 	return nil

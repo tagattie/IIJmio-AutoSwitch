@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -17,8 +18,8 @@ func getData(reqType string) ([]byte, error) {
 	case "coupon":
 		url = fmt.Sprintf("%s", couponEndpoint)
 	default:
-		fmt.Println("Get request type error: ", reqType)
-		err := fmt.Errorf("Get request type %s is not supported", reqType)
+		log.Println("Get request type error: ", reqType)
+		err := fmt.Errorf("Get request type %+v is not supported", reqType)
 		return nil, err
 	}
 
@@ -26,34 +27,28 @@ func getData(reqType string) ([]byte, error) {
 	req.Header.Add("X-IIJmio-Developer", config.Mio.DeveloperId)
 	req.Header.Add("X-IIJmio-Authorization", config.Mio.AccessToken)
 	if err != nil {
-		fmt.Println("HTTP GET request error: ", err)
+		log.Println("HTTP GET request error: ", err)
 		return nil, err
 	}
-	if debug == true {
-		fmt.Printf("%s\n", "HTTP GET request:")
-		fmt.Printf("%+v\n\n", *req)
-	}
+	log.Println("HTTP GET request:")
+	log.Printf("%+v\n", *req)
 
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println("HTTP GET response error: ", err)
+		log.Println("HTTP GET response error: ", err)
 		return nil, err
 	}
-	if debug == true {
-		fmt.Printf("%s\n", "HTTP GET response:")
-		fmt.Printf("%+v\n\n", *resp)
-	}
+	log.Println("HTTP GET response:")
+	log.Printf("%+v\n", *resp)
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("HTTP response body read error: ", err)
+		log.Println("HTTP response body read error: ", err)
 		return nil, err
 	}
-	if debug == true {
-		fmt.Printf("%s\n", "HTTP response body:")
-		fmt.Printf("%+v\n\n", string(body))
-	}
+	log.Println("HTTP response body:")
+	log.Printf("%+v\n", string(body))
 
 	return body, nil
 }
@@ -69,34 +64,28 @@ func putCouponRequest(couponReqBytes []byte) ([]byte, error) {
 	req.Header.Add("X-IIJmio-Authorization", config.Mio.AccessToken)
 	req.Header.Add("Content-Type", "application/json")
 	if err != nil {
-		fmt.Println("HTTP PUT request error: ", err)
+		log.Println("HTTP PUT request error: ", err)
 		return nil, err
 	}
-	if debug == true {
-		fmt.Printf("%s\n", "HTTP PUT request:")
-		fmt.Printf("%+v\n\n", *req)
-	}
+	log.Println("HTTP PUT request:")
+	log.Printf("%+v\n", *req)
 
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println("HTTP PUT response error: ", err)
+		log.Println("HTTP PUT response error: ", err)
 		return nil, err
 	}
-	if debug == true {
-		fmt.Printf("%s\n", "HTTP PUT response:")
-		fmt.Printf("%+v\n\n", *resp)
-	}
+	log.Println("HTTP PUT response:")
+	log.Printf("%+v\n", *resp)
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("HTTP body error: ", err)
+		log.Println("HTTP body error: ", err)
 		return nil, err
 	}
-	if debug == true {
-		fmt.Printf("%s\n", "HTTP response body:")
-		fmt.Printf("%+v\n\n", string(body))
-	}
+	log.Println("HTTP response body:")
+	log.Printf("%+v\n", string(body))
 
 	return body, nil
 }

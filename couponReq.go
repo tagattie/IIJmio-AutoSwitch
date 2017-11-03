@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"strings"
 )
 
@@ -42,7 +42,7 @@ func encodeCouponReqJSON(couponReqInfo map[string]bool) ([]byte, error) {
 			}
 			crhduis = append(crhduis, crhdui)
 		} else {
-			fmt.Println("Service code error: ", k)
+			log.Println("Service code error: ", k)
 		}
 	}
 	crci := cReqCouponInfo{
@@ -55,7 +55,7 @@ func encodeCouponReqJSON(couponReqInfo map[string]bool) ([]byte, error) {
 
 	couponReqBytes, err := json.Marshal(creq)
 	if err != nil {
-		fmt.Println("Coupon request JSON marshal error: ", err)
+		log.Println("Coupon request JSON marshal error: ", err)
 		return nil, err
 	}
 

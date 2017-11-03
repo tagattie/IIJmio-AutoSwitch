@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -12,6 +13,7 @@ import (
 const (
 	configFileDir  = "/usr/local/etc"
 	configFileName = "autoSwitch.json"
+	logFilePath    = "/var/tmp/autoswitch.log"
 	couponEndpoint = "https://api.iijmio.jp/mobile/d/v2/coupon/"
 	packetEndpoint = "https://api.iijmio.jp/mobile/d/v2/log/packet/"
 	authUrl        = "https://api.iijmio.jp/mobile/d/v1/authorization/?response_type=token&client_id=nWmKQvVQbEfM11PzENM&state=auth-request&redirect_uri=jp.or.iij4u.rr.tagattie.autoswitch"
@@ -59,7 +61,20 @@ var (
 var config configuration
 
 func main() {
+	// Setup logger
+	logfile, err := os.OpenFile(
+		logFilePath,
+		os.O_RDWR|os.O_CREATE|os.O_APPEND,
+		0644)
+	if err != nil {
+		fmt.Errorf("%s\n", "Cannot open log file.")
+		os.Exit(1)
+	}
+	log.SetOutput(logfile)
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+
 	// Command-line options
+	log.Println("Parsing command-line options:")
 	configdir = flag.String("c", configFileDir, "config file directory")
 	d := flag.Bool("d", false, "debug mode (verbose output)")
 	f := flag.Bool("f", false, "force send change request (even when no change)")
@@ -68,81 +83,72 @@ func main() {
 	debug = *d
 	force = *f
 	silent = *s
+	log.Printf("debug = %+v, force = %+v, silent = %+v\n", debug, force, silent)
 
 	// Configuration file
+	log.Println("Reading configuration file:")
 	cf := filepath.Join(*configdir, "/", configFileName)
 	if _, err := os.Stat(cf); err != nil {
-		fmt.Println("No such file or directory: ", cf)
-		fmt.Println("Trying to read config file in current working dir.")
+		log.Println("No such file or directory: ", cf)
+		log.Println("Try to read config file in the current working dir.")
 		cwd, _ := os.Getwd()
 		cf = filepath.Join(cwd, "/", configFileName)
 	}
 	file, err := ioutil.ReadFile(cf)
 	if err != nil {
-		fmt.Println("Config file read error: ", err)
-		os.Exit(1)
+		log.Fatalln("Configuration file read error: ", err)
 	}
 
 	// Configuration
 	if err := json.Unmarshal(file, &config); err != nil {
-		fmt.Println("JSON unmarshal error: ", err)
-		os.Exit(1)
-	}
-	if debug == true {
-		fmt.Printf("%s\n", "Configuration: ")
-		fmt.Printf("%+v\n\n", config)
+		log.Fatalln("Configuration JSON unmarshal error: ", err)
 	}
 	if config.Mio.MaxDailyAmount <= 0 {
-		fmt.Printf("WARNING: Max daily amount is less than or equal to 0. Coupon use will be always set OFF.\n")
+		log.Fatalln("Max daily amount must be a positive number.")
 	}
+	log.Println("Configuration:")
+	log.Printf("%+v\n", config)
 
 	// Get packet data from server
 	packetBytes, err := getData("packet")
 	if err != nil {
-		fmt.Println("Packet data request error: ", err)
-		os.Exit(1)
+		log.Fatalln("Packet data request error: ", err)
 	}
 
 	// Decode packet data
 	packetData, err := decodePacketDataJSON(packetBytes)
 	if err != nil {
-		fmt.Println("JSON data decode error: ", err)
+		log.Println("JSON data decode error: ", err)
 		subjectReason := packetData.ReturnCode
-		if config.Mail.Enabled == true {
+		if config.Mail.Enabled {
 			message := buildErrorMessage(subjectReason)
 			if err := sendMail(message); err != nil {
-				fmt.Println("Sending mail error: ", err)
+				log.Println("Sending mail error: ", err)
 			}
 		}
-		if config.Slack.Enabled == true {
+		if config.Slack.Enabled {
 			if err = sendSlack(subjectReason); err != nil {
-				fmt.Println("Sending slack error: ", err)
+				log.Println("Sending slack error: ", err)
 			}
 		}
 		os.Exit(1)
 	}
-	if debug == true {
-		fmt.Printf("%s\n", "Packet data JSON:")
-		fmt.Printf("%+v\n\n", *packetData)
-	}
+	log.Println("Packet data JSON:")
+	log.Printf("%+v\n", *packetData)
 
 	// Get coupon status and amount data from server
 	couponBytes, err := getData("coupon")
 	if err != nil {
-		fmt.Println("Coupon data request error: ", err)
-		os.Exit(1)
+		log.Fatalln("Coupon data request error: ", err)
 	}
 
 	// Decode coupon data
 	couponData, err := decodeCouponDataJSON(couponBytes)
 	if err != nil {
-		fmt.Println("JSON data decode error: ", err)
-		os.Exit(1)
+		log.Fatalln("JSON data decode error: ", err)
 	}
-	if debug == true {
-		fmt.Printf("%s\n", "Coupon data JSON:")
-		fmt.Printf("%+v\n\n", *couponData)
-	}
+	log.Println("Coupon data JSON:")
+	log.Printf("%+v\n", *couponData)
 
 	var latestPacketData map[string][]int
 	var couponState map[string]bool
@@ -164,41 +170,33 @@ func main() {
 	// Encode coupon request
 	couponReqBytes, err := encodeCouponReqJSON(couponReqInfo)
 	if err != nil {
-		fmt.Println("JSON data encode error: ", err)
-		os.Exit(1)
+		log.Fatalln("JSON data encode error: ", err)
 	}
-	if debug == true {
-		fmt.Printf("%s\n", "Coupon request JSON:")
-		fmt.Printf("%+v\n\n", string(couponReqBytes))
-	}
+	log.Println("Coupon request JSON:")
+	log.Printf("%+v\n", string(couponReqBytes))
 
 	// Send coupon request to server
 	couponRespBytes, err := putCouponRequest(couponReqBytes)
 	if err != nil {
-		fmt.Println("Coupon change request error: ", err)
-		os.Exit(1)
+		log.Fatalln("Coupon change request error: ", err)
 	}
 
 	// Decode coupon change response
 	couponResp, err := decodeCouponRespJSON(couponRespBytes)
 	if err != nil {
-		fmt.Println("JSON data decode error: ", err)
-		os.Exit(1)
+		log.Fatalln("JSON data decode error: ", err)
 	}
-	if silent == false || debug == true {
-		fmt.Printf("%s\n", "Counpon change response JSON:")
-		fmt.Printf("%+v\n\n", *couponResp)
-	}
+	log.Println("Counpon change response JSON:")
+	log.Printf("%+v\n", *couponResp)
 
 	// Send coupon change report mail
-	if config.Mail.Enabled == true {
+	if config.Mail.Enabled {
 		message := buildReportMessage(latestPacketData,
 			couponState,
 			couponAmount,
 			couponReqInfo)
 		if err := sendMail(message); err != nil {
-			fmt.Println("Sending mail error: ", err)
-			os.Exit(1)
+			log.Fatalln("Sending mail error: ", err)
 		}
 	}
 

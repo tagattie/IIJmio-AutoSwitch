@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/bluele/slack"
@@ -12,7 +13,7 @@ func sendSlack(message string) error {
 	var opt slack.ChatPostMessageOpt
 	opt.Username = "IIJmio Autoswitch"
 	if err := api.ChatPostMessage(config.Slack.Channel, constructSlackMessage(message), &opt); err != nil {
-		fmt.Println("Slack message send error: ", err)
+		log.Println("Slack message send error: ", err)
 		return err
 	}
 

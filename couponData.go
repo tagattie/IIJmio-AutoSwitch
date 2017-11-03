@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 )
 
 // Coupon-related data
@@ -47,13 +48,13 @@ func decodeCouponDataJSON(couponBytes []byte) (*couponData, error) {
 	var cd couponData
 
 	if err := json.Unmarshal(couponBytes, &cd); err != nil {
-		fmt.Println("Coupon request JSON unmarshal error: ", err)
+		log.Println("Coupon request JSON unmarshal error: ", err)
 		return nil, err
 	}
 
 	if returnCode := cd.ReturnCode; returnCode != "OK" {
-		fmt.Println("Coupon request return code error: ", returnCode)
-		err := fmt.Errorf("Coupon request return code is %s", returnCode)
+		log.Println("Coupon request return code error: ", returnCode)
+		err := fmt.Errorf("Coupon request return code is %+v", returnCode)
 		return nil, err
 	}
 
@@ -66,7 +67,7 @@ func getCouponStateAndAmount(couponData *couponData) (map[string]bool, int) {
 
 	cis := couponData.CouponInfo
 	if cisLength := len(cis); cisLength > 0 {
-		for i, _ := range cis {
+		for i := range cis {
 			hdois := cis[i].HdoInfo
 			if hdoisLength := len(hdois); hdoisLength > 0 {
 				for _, hdoInfo := range hdois {

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"sort"
 )
 
@@ -63,13 +64,13 @@ func decodePacketDataJSON(packetBytes []byte) (*packetData, error) {
 	var pd packetData
 
 	if err := json.Unmarshal(packetBytes, &pd); err != nil {
-		fmt.Println("Packet request JSON unmarshal error: ", err)
+		log.Println("Packet request JSON unmarshal error: ", err)
 		return nil, err
 	}
 
 	if returnCode := pd.ReturnCode; returnCode != "OK" {
-		fmt.Println("Packet request return code error: ", returnCode)
-		err := fmt.Errorf("Packet request return code is %s", returnCode)
+		log.Println("Packet request return code error: ", returnCode)
+		err := fmt.Errorf("Packet request return code is %+v", returnCode)
 		return &pd, err
 	}
 
@@ -81,7 +82,7 @@ func extractLatestPacketData(packetData *packetData) map[string][]int {
 	// Extract latest (= today's) packet data
 	plis := packetData.PacketLogInfo
 	if plisLength := len(plis); plisLength > 0 {
-		for i, _ := range plis {
+		for i := range plis {
 			hdois := plis[i].HdoInfo
 			if hdoisLength := len(hdois); hdoisLength > 0 {
 				for j, hdoInfo := range hdois {
