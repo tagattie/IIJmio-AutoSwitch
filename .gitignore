@@ -4,3 +4,4 @@ bin/
 test/
 *.exe
 *.json
+*.log
