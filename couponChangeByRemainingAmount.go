@@ -29,7 +29,7 @@ func couponChangeByRemainingCouponAmount(
 	couponAmountQuota := []int{}
 	for i := 1; i <= len(couponState); i++ {
 		couponAmountQuota = append(couponAmountQuota,
-			config.Mio.StartingCouponAmount-
+			config.Mio.StartingAmount-
 				((today-1)*config.Mio.MaxDailyAmount*len(couponState))-
 				(i*config.Mio.MaxDailyAmount))
 	}

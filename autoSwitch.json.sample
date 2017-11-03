@@ -1,13 +1,14 @@
 {
     "mio": {
-        "developerId":          "nWmKQvVQbEfM11PzENM",
-        "accessToken":          "YOUR_ACCESS_TOKEN",
-        "maxDailyAmount":       200,
-        "startingCouponAmount": 10000
+        "developerId":    "nWmKQvVQbEfM11PzENM",
+        "accessToken":    "YOUR_ACCESS_TOKEN",
+        "maxDailyAmount": 200,
+        "startingAmount": 10000
     },
     "switch" {
-        "switchMethod": 0  // 0: Per id coupon usage
-                           // 1: Remaining coupon amount
+        // 0: Per id coupon usage
+        // 1: Remaining coupon amount
+        "switchMethod": 0
     },
     "mail": {
         "enabled":    false,

@@ -19,10 +19,10 @@ const (
 )
 
 type mioconf struct {
-	DeveloperId          string `json:"developerId"`
-	AccessToken          string `json:"accessToken"`
-	MaxDailyAmount       int    `json:"maxDailyAmount"`
-	StartingCouponAmount int    `json:"startingCouponAmount"`
+	DeveloperId    string `json:"developerId"`
+	AccessToken    string `json:"accessToken"`
+	MaxDailyAmount int    `json:"maxDailyAmount"`
+	StartingAmount int    `json:"startingAmount"`
 }
 type switchconf struct {
 	SwitchMethod int `json:"switchMethod"`
