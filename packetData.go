@@ -22,7 +22,7 @@ type pDataHduInfo struct {
 	PacketLog      []packetLog `json:"packetLog"`
 }
 type packetLogInfo struct {
-	HddServiceCode string         `json:"hddServiceCode`
+	HddServiceCode string         `json:"hddServiceCode"`
 	Plan           string         `json:"plan"`
 	HdoInfo        []pDataHdoInfo `json:"hdoInfo"`
 	HduInfo        []pDataHduInfo `json:"hduInfo"`
