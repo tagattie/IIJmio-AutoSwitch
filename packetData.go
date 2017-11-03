@@ -104,29 +104,7 @@ func extractLatestPacketData(packetData *packetData) map[string][]int {
 }
 
 func extractLatestPacketDataSortedByAmount(packetData *packetData) ListStringIntSlice {
-	latestPacketData := make(map[string][]int)
-	// Extract latest (= today's) packet data
-	plis := packetData.PacketLogInfo
-	if plisLength := len(plis); plisLength > 0 {
-		for i, _ := range plis {
-			hdois := plis[i].HdoInfo
-			if hdoisLength := len(hdois); hdoisLength > 0 {
-				for j, hdoInfo := range hdois {
-					var pls PacketLogs
-					pls = hdois[j].PacketLog
-					if plLength := len(pls); plLength > 0 {
-						// Sort data in descending order by date
-						sort.Sort(pls)
-						// Index 0 means today
-						pl := make([]int, 2)
-						pl[0] = pls[0].WithCoupon
-						pl[1] = pls[0].WithoutCoupon
-						latestPacketData[hdoInfo.HdoServiceCode] = pl
-					}
-				}
-			}
-		}
-	}
+	latestPacketData := extractLatestPacketData(packetData)
 	// Sort latest package data by coupon usage amount
 	list := ListStringIntSlice{}
 	for k, v := range latestPacketData {
