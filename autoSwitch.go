@@ -67,8 +67,7 @@ func main() {
 		os.O_RDWR|os.O_CREATE|os.O_APPEND,
 		0644)
 	if err != nil {
-		fmt.Errorf("%s\n", "Cannot open log file.")
-		os.Exit(1)
+		log.Fatalln("Cannot open log file: ", logFilePath)
 	}
 	log.SetOutput(logfile)
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
