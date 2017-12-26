@@ -6,6 +6,8 @@ endif
 SRCS	:= $(shell find . -depth -maxdepth 1 -type f -name '*.go')
 LDFLAGS	:= -ldflags="-extldflags \"-static\""
 
+all: bin/$(NAME)
+
 bin/$(NAME): $(SRCS)
 	go get github.com/bluele/slack
 	go build -a -tags netgo -installsuffix netgo $(LDFLAGS) -o bin/$(NAME)
