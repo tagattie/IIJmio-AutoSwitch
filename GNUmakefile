@@ -1,7 +1,7 @@
 ifeq ($(OS), Windows_NT)
-    NAME	:= autoswitch.exe
+    NAME	:= mioswitch.exe
 else
-    NAME	:= autoswitch
+    NAME	:= mioswitch
 endif
 SRCS	:= $(shell find . -depth -maxdepth 1 -type f -name '*.go')
 LDFLAGS	:= -ldflags="-extldflags \"-static\""

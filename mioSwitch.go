@@ -11,8 +11,8 @@ import (
 
 const (
 	configFileDir  = "/usr/local/etc"
-	configFileName = "autoSwitch.json"
-	logFilePath    = "/var/tmp/autoswitch.log"
+	configFileName = "mioswitch.json"
+	logFilePath    = "/var/tmp/mioswitch.log"
 	couponEndpoint = "https://api.iijmio.jp/mobile/d/v2/coupon/"
 	packetEndpoint = "https://api.iijmio.jp/mobile/d/v2/log/packet/"
 	authUrl        = "https://api.iijmio.jp/mobile/d/v1/authorization/?response_type=token&client_id=nWmKQvVQbEfM11PzENM&state=auth-request&redirect_uri=jp.or.iij4u.rr.tagattie.autoswitch"

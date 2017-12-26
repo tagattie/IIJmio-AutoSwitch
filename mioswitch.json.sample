@@ -18,7 +18,7 @@
             "someone1@example.com",
             "someone2@example.com"
         ],
-        "fromAddr":   "autoswitch@example.com",
+        "fromAddr":   "mioswitch@example.com",
         "auth":       true,
         "username":   "authusername",
         "password":   "authpassword"
