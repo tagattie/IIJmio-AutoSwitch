@@ -66,9 +66,11 @@ func main() {
 		os.O_RDWR|os.O_CREATE|os.O_APPEND,
 		0644)
 	if err != nil {
-		log.Fatalln("Cannot open log file: ", logFilePath)
+		log.Println("Cannot open log file: ", logFilePath)
+		log.Println("Log will be printed to stdout.")
+	} else {
+		log.SetOutput(logfile)
 	}
-	log.SetOutput(logfile)
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
 	// Command-line options
