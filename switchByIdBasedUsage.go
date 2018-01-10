@@ -4,7 +4,7 @@ import (
 	"log"
 )
 
-func couponChangeByIdBasedCouponUsage(
+func switchByIdBasedUsage(
 	packetData *packetData,
 	couponData *couponData) (
 	map[string][]int,

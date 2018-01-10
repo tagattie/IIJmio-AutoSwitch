@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func couponChangeByRemainingCouponAmount(
+func switchByRemainAmount(
 	packetData *packetData,
 	couponData *couponData) (
 	map[string][]int,

@@ -157,10 +157,10 @@ func main() {
 	switch config.Switch.SwitchMethod {
 	case 0:
 		latestPacketData, couponState, couponAmount, couponReqInfo =
-			couponChangeByIdBasedCouponUsage(packetData, couponData)
+			switchByIdBasedUsage(packetData, couponData)
 	case 1:
 		latestPacketData, couponState, couponAmount, couponReqInfo =
-			couponChangeByRemainingCouponAmount(packetData, couponData)
+			switchByRemainAmount(packetData, couponData)
 	}
 	// If no need to make change request, exit here
 	if len(couponReqInfo) == 0 && !force {
