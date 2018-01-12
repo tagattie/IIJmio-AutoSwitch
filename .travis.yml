@@ -1,8 +1,15 @@
 language: go
-
 go:
     - 1.9.x
-
 os:
     - linux
     - osx
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_TOKEN
+  skip_cleanup: true
+  file_glob: true
+  file: '*.{tar.gz,zip}'
+  on:
+    tags: true
