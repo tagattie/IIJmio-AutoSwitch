@@ -5,3 +5,5 @@ test/
 *.exe
 *.json
 *.log
+*.tar.gz
+*.zip
