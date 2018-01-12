@@ -5,6 +5,9 @@ os:
     - linux
     - osx
 
+before_deploy:
+  - GOOS=freebsd GOARCH=amd64 make
+  - make release
 deploy:
   provider: releases
   api_key: $GITHUB_TOKEN
