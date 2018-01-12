@@ -13,17 +13,17 @@ IIJmio向け: クーポン使用量が所定の値を超えたとき、クーポ
 
 Androidには[Mio Mix](https://play.google.com/store/apps/details?id=com.itworks.miomix)というアプリがあり、一日あたり所定の通信量を超えた場合にクーポン使用を自動オフする機能を提供しています。
 
-しかし、iOSにはこういったアプリがないようです。また、AndroidでもOSなどによるバックグラウンドタスクキル機能の影響でアプリがうまく動作しないケースもあります。このプログラムは、Unix-like OSベースの端末、サーバ上で動作し、設定した一日あたりのクーポン使用量を超えたときに、クーポンを自動でOFFにします。
+しかし、iOSにはこういったアプリがないようです。また、AndroidでもOSによるバックグラウンドタスクキル機能などの影響でアプリがうまく動作しないケースもあります。このプログラムは、Unix-like OSあるいはWindowsベースの端末、サーバ上で動作し、設定した一日あたりのクーポン使用量を超えたときに、クーポン使用を自動でOFFにします。
 
 ## 機能
 以下の機能を提供します。
 
 - クーポン使用の自動ON/OFF
   - クーポン使用ONのとき:
-      - 事前に設定した一日あたりのクーポン使用量を超えたら、クーポン使用をOFFにします
+    - 事前に設定した一日あたりのクーポン使用量を超えたら、クーポン使用をOFFにします
   - クーポン使用OFFのとき:
-      - 一日あたりのクーポン使用量を下回り、かつクーポンが残っていればクーポン使用をONにします
-      - (日付が変わって通信量がクリアされるときを想定しています)
+    - 一日あたりのクーポン使用量を下回り、かつクーポンが残っていればクーポン使用をONにします
+    - (日付が変わって通信量がクリアされるときを想定しています)
 - メール送信機能有効化時:
   - クーポンON/OFF状態変化時に設定した宛先にメール送信
   - 認証エラー発生時に設定した宛先にメール送信
@@ -36,7 +36,6 @@ Androidには[Mio Mix](https://play.google.com/store/apps/details?id=com.itworks
 
 以下の環境で動作確認をしています。
 
-- Ubuntu 14.04.5 64bit (Go 1.2.1, GNU Make 3.81)
 - FreeBSD 11.1-RELEASE 64bit (Go 1.9, GNU Make 4.2.1)
 - Windows 10 64bit (Go 1.9, GNU Make 4.2.1)
 
@@ -49,7 +48,7 @@ cd ${GOPATH-$HOME/go}/src/github.com/tagattie/IIJmio-AutoSwitch
 make
 ```
 
-`${GOPATH}/src/github.com/tagattie/IIJmio-AutoSwitch/bin/autoswitch`に実行ファイルが生成されます。
+`${GOPATH}/src/github.com/tagattie/IIJmio-AutoSwitch/bin/mioswitch`に実行ファイルが生成されます。(Windowsの場合は、実行ファイル名が`mioswitch.exe`となります。)
 
 ## 設定
 このプログラムは、IIJmioが提供する[クーポンスイッチAPI](https://www.iijmio.jp/hdd/coupon/mioponapi.jsp)を使用します。以下で、プログラムの動作に必要な設定を行ないます。
@@ -79,71 +78,82 @@ make
 - `/usr/local/etc` あるいは
 - カレントワーキングディレクトリ
 
-に`autoSwitch.json`という名前の設定ファイルがあることを期待しています。プログラムを実行する前に、以下の設定を行ないます:
+に`mioswitch.json`という名前の設定ファイルがあることを期待しています。プログラムを実行する前に、以下の設定を行ないます:
 
-```json:autoSwitch.json
+```json:mioswitch.json
 {
-    "mio": {
-        "developerId":    "nWmKQvVQbEfM11PzENM",
-        "accessToken":    "YOUR_ACCESS_TOKEN",
-        "maxDailyAmount": 200
-    },
-    "mail": {
-        "enabled":    false,
-        "smtpServer": "smtp.example.com",
-        "smtpPort":   "587",
-        "toAddrs":    [
-            "someone1@example.com",
-            "someone2@example.com"
-        ],
-        "fromAddr":   "autoswitch@example.com",
-        "auth":       true,
-        "username":   "authusername",
-        "password":   "authpassword"
-    },
-    "slack": {
-        "enabled": false,
-        "token":   "slacktoken",
-        "channel": "channelname",
-    }
+  "mio": {
+    "developerId":    "nWmKQvVQbEfM11PzENM",
+    "accessToken":    "YOUR_ACCESS_TOKEN",
+    "maxDailyAmount": 100,
+    "startingAmount": 10000
+  },
+  "switch": {
+    "switchMethod": 1
+  },
+  "mail": {
+    "enabled":    false,
+    "smtpServer": "smtp.example.com",
+    "smtpPort":   "587",
+    "toAddrs":    [
+      "someone1@example.com",
+      "someone2@example.com"
+    ],
+    "fromAddr":   "autoswitch@example.com",
+    "auth":       true,
+    "username":   "authusername",
+    "password":   "authpassword"
+  },
+  "slack": {
+    "enabled": false,
+    "token":   "slacktoken",
+    "channel": "channelname",
+  }
 }
 ```
 
 - 設定項目
   - `mio`: クーポンスイッチAPI関連の設定
-      - `developerId`: クーポンスイッチAPIの認証に使用する開発者IDです。変更しないでください。
-      - `accessToken`: 認証に使用するアクセストークンです。上記の手順で取得した値を設定してください。
-      - `maxDailyAmount`: ここで設定した値(MB)を超えるとクーポン使用をOFFにします。
+    - `developerId`: クーポンスイッチAPIの認証に使用する開発者IDです。変更しないでください。
+    - `accessToken`: 認証に使用するアクセストークンです。上記の手順で取得した値を設定してください。
+    - `maxDailyAmount`: ここで設定した値(MB)を超えるとクーポン使用をOFFにします。
+    - `startingAmount`: 月初におけるクーポン残量(MB)を指定します。
+  - `switch`:
+    - `switchMethod`: クーポンの使用量を求める方式を指定します。以下に示す1あるいは2の方式が指定できます。
+      1. ユーザのクーポン使用量データを直接使用します。クーポン使用量が上記の設定値を上回った場合に、クーポン使用をOFFにします。
+      1. ユーザのクーポン使用量とクーポンのトータル残量データを使用します。上記の設定値から、当日までに残っているべきクーポン残量を算出し、クーポン残量がこの値を下回った場合に、使用量の最も多いユーザのクーポン使用をOFFにします。
+      
+      ユーザのクーポン使用量データはタイムリーに更新されないようなので、2の方式を推奨します。
   - `mail`: メール関連の設定
-      - `enabled`: メール送信機能の有効化(trueで有効)。
-      - `smtpServer`: メール送信に使用するサーバーを指定します。
-      - `smtpPort`: メール送信に使用するサーバーのポート番号を指定します。
-      - `toAddrs`: メール送信先のアドレスを指定します(複数可)。
-      - `fromAddr`: メールの送信元となるアドレスを指定します。
-      - `auth`: メールサーバーが認証を必要とする場合、trueを指定します。
-      - `username`: 認証に使用するユーザー名を指定します。
-      - `password`: 認証に使用するパスワードを指定します。
+    - `enabled`: メール送信機能の有効化(trueで有効)。
+    - `smtpServer`: メール送信に使用するサーバーを指定します。
+    - `smtpPort`: メール送信に使用するサーバーのポート番号を指定します。
+    - `toAddrs`: メール送信先のアドレスを指定します(複数可)。
+    - `fromAddr`: メールの送信元となるアドレスを指定します。
+    - `auth`: メールサーバーが認証を必要とする場合、trueを指定します。
+    - `username`: 認証に使用するユーザー名を指定します。
+    - `password`: 認証に使用するパスワードを指定します。
   - `slack`: Slack関連の設定
-      - `enabled`: Slackメッセージ送信機能の有効化(trueで有効)。
-      - `token`: Slack APIの認証に使用するトークンを指定します。トークンの取得については[Slack Web API](https://api.slack.com/web)を参照してください。
-      - `channel`: メッセージを送信するSlackのチャネル名を指定します。
+    - `enabled`: Slackメッセージ送信機能の有効化(trueで有効)。
+    - `token`: Slack APIの認証に使用するトークンを指定します。トークンの取得については[Slack Web API](https://api.slack.com/web)を参照してください。
+    - `channel`: メッセージを送信するSlackのチャネル名を指定します。
 
 ## 実行
 以下のコマンドを実行します:
 
 ```sh
 cd ${GOPATH-$HOME/go}/src/github.com/tagattie/IIJmio-AutoSwitch
-./bin/autoswitch
+./bin/mioswitch
 ```
 
 コマンドラインオプションの一覧は以下で確認できます:
 
 ```sh
-./bin/autoswitch -h
+./bin/mioswitch -h
 ```
 
 ## 定期的な実行
 Cron(あるいは同等のプログラム)を使用します。(以下の例では、毎時15分にプログラムを実行します。)
 
-    #minute hour    mday    month   wday    command
-    15      *       *       *       *       ${GOPATH}/src/github.com/tagattie/IIJmio-AutoSwitch/bin/autoswitch
+    #min hour mday mon wday command
+    15   *    *    *   *    ${GOPATH}/src/github.com/tagattie/IIJmio-AutoSwitch/bin/mioswitch
