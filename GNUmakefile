@@ -3,8 +3,11 @@ ifeq ($(OS), Windows_NT)
 else
     NAME	:= mioswitch
 endif
-SRCS	:= $(shell find . -depth -maxdepth 1 -type f -name '*.go')
-LDFLAGS	:= -ldflags="-extldflags \"-static\""
+VERSION		:= 0.3.0
+REVISION	:= $(shell git rev-parse --short HEAD)
+
+SRCS		:= $(shell find . -depth -maxdepth 1 -type f -name '*.go')
+LDFLAGS		:= -ldflags="-X \"main.version=$(VERSION)\" -X \"main.revision=$(REVISION)\" -extldflags \"-static\""
 
 all: bin/$(NAME)
 

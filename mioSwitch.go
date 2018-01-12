@@ -52,6 +52,9 @@ type configuration struct {
 }
 
 var (
+	version   string
+	revision  string
+
 	configdir *string
 	debug     bool
 	force     bool
