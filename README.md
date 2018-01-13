@@ -11,7 +11,7 @@ mioswitch is a tool for users of [IIJmio Mobile](https://www.iijmio.jp/).
 
 Don't you run out of your coupon when nearing month-end due to (over)use of movie and/or music streaming services? Doesn't one of the members of your "family share plan" consume coupon too much?
 
-There is an android application called [Mio Mix](https://play.google.com/store/apps/details?id=com.itworks.miomix), which automatically switch coupon use off when package usage is over a preset amount of maximum daily use.
+There is an android application called [Mio Mix](https://play.google.com/store/apps/details?id=com.itworks.miomix&hl=en), which automatically switches coupon use off when packet usage is over a preset amount of maximum daily use.
 
 However, iOS doesn't seem to have that kind of application. In case of android, the application may not function well because of "background task kill" of the OS.
 
