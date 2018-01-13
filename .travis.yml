@@ -1,16 +1,17 @@
 language: go
 go:
-    - 1.9.x
+  - 1.9.x
 os:
-    - linux
-    - osx
+  - linux
+  - osx
 
 before_deploy:
   - GOOS=freebsd GOARCH=amd64 make
   - make release
 deploy:
   provider: releases
-  api_key: $GITHUB_TOKEN
+  api_key:
+    secure: 5V2bpiZykz/lEcb6Zyo4C8/UsB006jZ3mGIHEU85f7kDP3UbCufZ7BlxW+nSqFw8IddztB/nhgjcgOTL35VnQY0mw3jgFZvboLqbHxJ2gnUiJ2rfRvEKt60zFOkFZQMllHHCUDI4y18UGxPtwpHqa3k/mDI4uDy8mc4SCWv/Ivd8OyHH6s29f/DT78Fy6eYY2PWoLvhpX/4gGy5xqgbfpa68C8vlpy4jl4DrsGIAnzkcHQrlWbrfs00wOIeKqlxhZitOsA7etCYf1So8zLxyWmFx7he/0/4tAjizkXFRTitwlUYaqu8qTpr1XnjQxk9nWyFW0aPcD0av/pG5lwcgiUTQkcr3WUwQwFS/zf+7CaPNwNPrN19GYRubac3IhLeysWjg5ecE0tiliOBqUPC6tHy8GDrdbxCWDEcpL8wfzYm34n96XhGLxSJ/Jhe2dQadnMpMMq8R7zTCqbKBvltKGuAyFAQUYyqSVJlMWFPe6utaKr0Obi49MnZWQIDcgaTXCQbRUBDbg9pMtt/FSSIxvxD6/UpHv0O/nD1cCz7gYFRPp51sFUUcklk7FAbKlVYdwdBsbCqM7ipsdT5gApod9pDrJrIrgcf9hDOzvHy5P0I4je/2nF8pUrOMDmME06wjlZAmu4FvUwPVBNYBd48ojW9twM1415AsLixpTHd4r4o=
   skip_cleanup: true
   file_glob: true
   file: '*.{tar.gz,zip}'
